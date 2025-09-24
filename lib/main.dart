@@ -44,7 +44,19 @@ class _MyWidgetState extends State<MyWidget> {
       child: SizedBox(
         width: double.infinity,
         child: TextButton(
-          onPressed: () {},
+          onPressed: () {
+            if (label == 'صح' && Answers[RankedQuestion] == true ||
+                label == 'خطأ' && Answers[RankedQuestion] == false) {
+              setState(() {
+                score.add(correct);
+              });
+            } else {
+              setState(() {
+                score.add(incorrect);
+              });
+            }
+            RankedQuestion++;
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: 'صح' == label ? Colors.green : Colors.red,
             shape: RoundedRectangleBorder(
@@ -57,6 +69,29 @@ class _MyWidgetState extends State<MyWidget> {
     );
   }
 
+  Padding correct = Padding(
+    padding: const EdgeInsets.all(3.0),
+    child: Icon(Icons.thumb_up_alt_rounded, color: Colors.green),
+  );
+  Padding incorrect = Padding(
+    padding: const EdgeInsets.all(3.0),
+    child: Icon(Icons.thumb_down, color: Colors.red),
+  );
+
+  int RankedQuestion = 0;
+  List<Widget> score = [];
+  List Answers = [true, false, true, true, false];
+  List<String> Questions = [
+    "عدد الكواكب في المجموعة الشمسية 8 كواكب",
+    "الارض هي ثالث كواكب المجموعة الشمسية",
+    "الشمس هي اكبر نجم في المجموعة الشمسية",
+    "المريخ هو الكوكب الاحمر",
+    "المشتري هو اكبر كواكب المجموعة الشمسية",
+  ];
+  List<String> Images = List.generate(
+    7,
+    (index) => 'images/image-${index + 1}.jpg',
+  );
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -66,11 +101,12 @@ class _MyWidgetState extends State<MyWidget> {
           flex: 5,
           child: Column(
             children: [
-              Image.asset('images/image-1.jpg', fit: BoxFit.cover),
+              Row(children: score),
+              Image.asset(Images[RankedQuestion], fit: BoxFit.cover),
               SizedBox(height: 20),
               Flexible(
                 child: Text(
-                  "  عدد الكواكب في المجموعة الشمسية 8 كواكب",
+                  Questions[RankedQuestion],
                   style: TextStyle(
                     fontSize: 27,
                     fontWeight: FontWeight.bold,
