@@ -46,11 +46,11 @@ class _MyWidgetState extends State<MyWidget> {
           if (label == 'صح' && Answers[RankedQuestion] == true ||
               label == 'خطأ' && Answers[RankedQuestion] == false) {
             setState(() {
-              score.add(correct);
+              score.add(true);
             });
           } else {
             setState(() {
-              score.add(incorrect);
+              score.add(false);
             });
           }
           setState(() {
@@ -68,18 +68,12 @@ class _MyWidgetState extends State<MyWidget> {
     );
   }
 
-  Padding correct = Padding(
-    padding: const EdgeInsets.all(3.0),
-    child: Icon(Icons.thumb_up_alt_rounded, color: Colors.green),
-  );
-  Padding incorrect = Padding(
-    padding: const EdgeInsets.all(3.0),
-    child: Icon(Icons.thumb_down, color: Colors.red),
-  );
+  Icon correct = Icon(Icons.thumb_up_alt_rounded, color: Colors.green);
+  Icon incorrect = Icon(Icons.thumb_down, color: Colors.red);
 
   int RankedQuestion = 0;
-  List<Widget> score = [];
-  List Answers = [true, true, false, false, true];
+  List<bool> score = [];
+  List<bool> Answers = [true, true, false, false, true];
   List<String> Questions = [
     "عدد الكواكب في المجموعة الشمسية 8 كواكب",
     "القطط حيوانات اليفة",
@@ -94,69 +88,80 @@ class _MyWidgetState extends State<MyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return RankedQuestion < Questions.length
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                flex: 5,
-                child: Column(
-                  children: [
-                    Row(children: score),
-                    Image.asset(Images[RankedQuestion], fit: BoxFit.cover),
-                    SizedBox(height: 20),
-                    Flexible(
-                      child: Text(
-                        Questions[RankedQuestion],
-                        style: TextStyle(
-                          fontSize: 27,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(child: myButton('صح')),
-              Expanded(child: myButton('خطأ')),
-            ],
-          )
-        : Center(
+    if (RankedQuestion < Questions.length) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            flex: 5,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'لقد انهيت الاختبار',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
+                Row(
+                  children: score
+                      .map((ele) => ele ? correct : incorrect)
+                      .toList(),
                 ),
+                Image.asset(Images[RankedQuestion], fit: BoxFit.cover),
                 SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      RankedQuestion = 0;
-                      score = [];
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
+                Flexible(
                   child: Text(
-                    'اعادة الاختبار',
-                    style: TextStyle(color: Colors.white),
+                    Questions[RankedQuestion],
+                    style: TextStyle(
+                      fontSize: 27,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ],
             ),
-          );
+          ),
+          Expanded(child: myButton('صح')),
+          Expanded(child: myButton('خطأ')),
+        ],
+      );
+    } else {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'لقد انهيت الاختبار',
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  RankedQuestion = 0;
+                  score = [];
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Text(
+                'اعادة الاختبار',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            SizedBox(height: 7),
+            Text(
+              " Score : " + score.where((ele) => ele).length.toString(),
+              // textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
