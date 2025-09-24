@@ -1,6 +1,7 @@
 // import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
 
 import 'package:flutter/material.dart';
+import 'package:info_compitation_app/Questions.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,8 +44,9 @@ class _MyWidgetState extends State<MyWidget> {
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: TextButton(
         onPressed: () {
-          if (label == 'صح' && Answers[RankedQuestion] == true ||
-              label == 'خطأ' && Answers[RankedQuestion] == false) {
+          bool correctAnswer = Question[RankedQuestion].Answer;
+          if (label == 'صح' && correctAnswer ||
+              label == 'خطأ' && !correctAnswer) {
             setState(() {
               score.add(true);
             });
@@ -73,22 +75,41 @@ class _MyWidgetState extends State<MyWidget> {
 
   int RankedQuestion = 0;
   List<bool> score = [];
-  List<bool> Answers = [true, true, false, false, true];
-  List<String> Questions = [
-    "عدد الكواكب في المجموعة الشمسية 8 كواكب",
-    "القطط حيوانات اليفة",
-    "الصين موجودة بالقارة الافريقية",
-    "الارض مسطحة وليست كروية",
-    "المشتري هو اكبر كواكب المجموعة الشمسية",
-  ];
-  List<String> Images = List.generate(
-    7,
-    (index) => 'images/image-${index + 1}.jpg',
-  );
 
+  // List<String> Images = List.generate(
+  //   7,
+  //   (index) => 'images/image-${index + 1}.jpg',
+  // );
+  List<Questions> Question = [
+    Questions(
+      QuestionText: "عدد الكواكب في المجموعة الشمسية 8 كواكب",
+      QuestionImage: "images/image-1.jpg",
+      Answer: true,
+    ),
+    Questions(
+      QuestionText: "القطط حيوانات اليفة",
+      QuestionImage: "images/image-2.jpg",
+      Answer: true,
+    ),
+    Questions(
+      QuestionText: "الصين موجودة بالقارة الافريقية",
+      QuestionImage: "images/image-3.jpg",
+      Answer: false,
+    ),
+    Questions(
+      QuestionText: "الارض مسطحة وليست كروية",
+      QuestionImage: "images/image-4.jpg",
+      Answer: false,
+    ),
+    Questions(
+      QuestionText: "المشتري هو اكبر كواكب المجموعة الشمسية",
+      QuestionImage: "images/image-5.jpg",
+      Answer: true,
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
-    if (RankedQuestion < Questions.length) {
+    if (RankedQuestion < Question.length) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -101,11 +122,14 @@ class _MyWidgetState extends State<MyWidget> {
                       .map((ele) => ele ? correct : incorrect)
                       .toList(),
                 ),
-                Image.asset(Images[RankedQuestion], fit: BoxFit.cover),
+                Image.asset(
+                  Question[RankedQuestion].QuestionImage,
+                  fit: BoxFit.cover,
+                ),
                 SizedBox(height: 20),
                 Flexible(
                   child: Text(
-                    Questions[RankedQuestion],
+                    Question[RankedQuestion].QuestionText,
                     style: TextStyle(
                       fontSize: 27,
                       fontWeight: FontWeight.bold,
