@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:info_compitation_app/Questions.dart';
+import 'package:info_compitation_app/QuestionsList.dart';
 
+Questionslist questionslist = Questionslist();
 void main() {
   runApp(const MyApp());
 }
@@ -42,22 +44,21 @@ class _MyWidgetState extends State<MyWidget> {
   Padding myButton(String label) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: TextButton(
+      child: ElevatedButton(
         onPressed: () {
-          bool correctAnswer = Question[RankedQuestion].Answer;
+          bool correctAnswer = questionslist.Questionsgroup[RankedQuestion].Answer;
           if (label == 'صح' && correctAnswer ||
               label == 'خطأ' && !correctAnswer) {
             setState(() {
               score.add(true);
+              RankedQuestion++;
             });
           } else {
             setState(() {
               score.add(false);
+              RankedQuestion++;
             });
           }
-          setState(() {
-            RankedQuestion++;
-          });
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: 'صح' == label ? Colors.green : Colors.red,
@@ -76,40 +77,9 @@ class _MyWidgetState extends State<MyWidget> {
   int RankedQuestion = 0;
   List<bool> score = [];
 
-  // List<String> Images = List.generate(
-  //   7,
-  //   (index) => 'images/image-${index + 1}.jpg',
-  // );
-  List<Questions> Question = [
-    Questions(
-      QuestionText: "عدد الكواكب في المجموعة الشمسية 8 كواكب",
-      QuestionImage: "images/image-1.jpg",
-      Answer: true,
-    ),
-    Questions(
-      QuestionText: "القطط حيوانات اليفة",
-      QuestionImage: "images/image-2.jpg",
-      Answer: true,
-    ),
-    Questions(
-      QuestionText: "الصين موجودة بالقارة الافريقية",
-      QuestionImage: "images/image-3.jpg",
-      Answer: false,
-    ),
-    Questions(
-      QuestionText: "الارض مسطحة وليست كروية",
-      QuestionImage: "images/image-4.jpg",
-      Answer: false,
-    ),
-    Questions(
-      QuestionText: "المشتري هو اكبر كواكب المجموعة الشمسية",
-      QuestionImage: "images/image-5.jpg",
-      Answer: true,
-    ),
-  ];
   @override
   Widget build(BuildContext context) {
-    if (RankedQuestion < Question.length) {
+    if (RankedQuestion < questionslist.Questionsgroup.length) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -123,13 +93,13 @@ class _MyWidgetState extends State<MyWidget> {
                       .toList(),
                 ),
                 Image.asset(
-                  Question[RankedQuestion].QuestionImage,
+                  questionslist.Questionsgroup[RankedQuestion].QuestionImage,
                   fit: BoxFit.cover,
                 ),
                 SizedBox(height: 20),
                 Flexible(
                   child: Text(
-                    Question[RankedQuestion].QuestionText,
+                    questionslist.Questionsgroup[RankedQuestion].QuestionText,
                     style: TextStyle(
                       fontSize: 27,
                       fontWeight: FontWeight.bold,

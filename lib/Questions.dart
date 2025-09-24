@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class Questions  {
+class Question  {
   String QuestionImage;
   bool Answer;
   String QuestionText;
-  Questions({required this.QuestionText , required this.QuestionImage ,required this.Answer});
+  Question({required this.QuestionText , required this.QuestionImage ,required this.Answer});
   }
