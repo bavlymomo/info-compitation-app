@@ -41,30 +41,29 @@ class _MyWidgetState extends State<MyWidget> {
   Padding myButton(String label) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: SizedBox(
-        width: double.infinity,
-        child: TextButton(
-          onPressed: () {
-            if (label == 'صح' && Answers[RankedQuestion] == true ||
-                label == 'خطأ' && Answers[RankedQuestion] == false) {
-              setState(() {
-                score.add(correct);
-              });
-            } else {
-              setState(() {
-                score.add(incorrect);
-              });
-            }
+      child: TextButton(
+        onPressed: () {
+          if (label == 'صح' && Answers[RankedQuestion] == true ||
+              label == 'خطأ' && Answers[RankedQuestion] == false) {
+            setState(() {
+              score.add(correct);
+            });
+          } else {
+            setState(() {
+              score.add(incorrect);
+            });
+          }
+          setState(() {
             RankedQuestion++;
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: 'صح' == label ? Colors.green : Colors.red,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+          });
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: 'صح' == label ? Colors.green : Colors.red,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-          child: Text(label, style: TextStyle(color: Colors.white)),
         ),
+        child: Text(label, style: TextStyle(color: Colors.white)),
       ),
     );
   }
@@ -80,47 +79,84 @@ class _MyWidgetState extends State<MyWidget> {
 
   int RankedQuestion = 0;
   List<Widget> score = [];
-  List Answers = [true, false, true, true, false];
+  List Answers = [true, true, false, false, true];
   List<String> Questions = [
     "عدد الكواكب في المجموعة الشمسية 8 كواكب",
-    "الارض هي ثالث كواكب المجموعة الشمسية",
-    "الشمس هي اكبر نجم في المجموعة الشمسية",
-    "المريخ هو الكوكب الاحمر",
+    "القطط حيوانات اليفة",
+    "الصين موجودة بالقارة الافريقية",
+    "الارض مسطحة وليست كروية",
     "المشتري هو اكبر كواكب المجموعة الشمسية",
   ];
   List<String> Images = List.generate(
     7,
     (index) => 'images/image-${index + 1}.jpg',
   );
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      // mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Expanded(
-          flex: 5,
-          child: Column(
+    return RankedQuestion < Questions.length
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(children: score),
-              Image.asset(Images[RankedQuestion], fit: BoxFit.cover),
-              SizedBox(height: 20),
-              Flexible(
-                child: Text(
-                  Questions[RankedQuestion],
+              Expanded(
+                flex: 5,
+                child: Column(
+                  children: [
+                    Row(children: score),
+                    Image.asset(Images[RankedQuestion], fit: BoxFit.cover),
+                    SizedBox(height: 20),
+                    Flexible(
+                      child: Text(
+                        Questions[RankedQuestion],
+                        style: TextStyle(
+                          fontSize: 27,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(child: myButton('صح')),
+              Expanded(child: myButton('خطأ')),
+            ],
+          )
+        : Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'لقد انهيت الاختبار',
                   style: TextStyle(
-                    fontSize: 27,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
                   textAlign: TextAlign.center,
                 ),
-              ),
-            ],
-          ),
-        ),
-        Expanded(child: myButton('صح')),
-        Expanded(child: myButton('خطأ')),
-      ],
-    );
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      RankedQuestion = 0;
+                      score = [];
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(
+                    'اعادة الاختبار',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 }
